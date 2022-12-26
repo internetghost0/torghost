@@ -30,9 +30,9 @@ DNS_SERVER = '8.8.8.8'
 
 
 VERSION = "3.1.1"
-IP_API = "https://api.ipify.org/?format=json"
+# IP_API = "https://api.ipify.org/?format=json"
+CHECK_TOR_URL = "https://check.torproject.org/"
 LATEST_RELEASE_API = "https://api.github.com/repos/SusmithKrishnan/torghost/releases/latest"
-
 
 class bcolors:
 
@@ -89,12 +89,15 @@ def usage():
 def ip():
     while True:
         try:
-            jsonRes = get(IP_API).json()
-            ipTxt = jsonRes["ip"]
+            # jsonRes = get(IP_API).json()
+            # ipTxt = jsonRes["ip"]
+            checkTorPage = get(CHECK_TOR_URL).text
+            if 'Congratulations. This browser is configured to use Tor.' in checkTorPage:
+                return 'You have tor IP'
+            else:
+                return 'You have regular IP'
         except:
             continue
-        break
-    return ipTxt
 
 
 def check_root():
