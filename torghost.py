@@ -12,10 +12,25 @@ from stem import Signal
 from stem.control import Controller
 from packaging import version
 
+
+# you can change it or remove it
+# to get bridges: https://bridges.torproject.org/bridges/?transport=obfs4
+TOR_BRIDGES = \
+"""
+ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy
+UseBridges 1
+
+Bridge obfs4 202.61.193.92:47247 EB229EE634C843DE16D295CE5281F7B8E0767E07 cert=y5/y9//2GGu8CS9P/9t84AXLmxLCIXQLExGshK2w1asEf1G/NSaEN49KT7GY2nsvCkl1Yw iat-mode=0
+Bridge obfs4 120.51.68.71:443 1B2E6BDA9DA29A9EB2D04E07BD4DA0BA16D8467A cert=j060gm7IebArIA5ExPw7pOfphXUW8Tuyg3pyATH/Xs2ZGMUb0wv5HAO0xjLVuONnObtObQ iat-mode=0
+Bridge obfs4 135.181.105.141:443 A7878416619C89A4BDC53CC180790576D61FA523 cert=OzNDqJ1iQRnpP3j91wWZtEwjYN3F6wCvKyC/7ltbQJSmByqzQVXgvfdoP6LODL9I0/hPJw iat-mode=0
+"""
+
+# you can change dns-server
+DNS_SERVER = '8.8.8.8'
+
+
 VERSION = "3.1.1"
-
 IP_API = "https://api.ipify.org/?format=json"
-
 LATEST_RELEASE_API = "https://api.github.com/repos/SusmithKrishnan/torghost/releases/latest"
 
 
@@ -84,30 +99,30 @@ def ip():
 
 def check_root():
     if os.geteuid() != 0:
-        print("You must be root; Say the magic word 'sudo'")
+        print("You must be root; Say the magic word 'sudo' or 'doas'")
         sys.exit(0)
 
 
 signal.signal(signal.SIGINT, sigint_handler)
 
 TorrcCfgString = \
-    """
+f"""
 VirtualAddrNetwork 10.0.0.0/10
 AutomapHostsOnResolve 1
 TransPort 9040
 DNSPort 5353
 ControlPort 9051
 RunAsDaemon 1
+
+{TOR_BRIDGES}
 """
 
-resolvString = 'nameserver 127.0.0.1'
+resolvString = f'nameserver {DNS_SERVER}'
 
 Torrc = '/etc/tor/torghostrc'
 resolv = '/etc/resolv.conf'
 
-
 def start_torghost():
-    print(t() + ' Always check for updates using -u option')
     os.system('sudo cp /etc/resolv.conf /etc/resolv.conf.bak')
     if os.path.exists(Torrc) and TorrcCfgString in open(Torrc).read():
         print(t() + ' Torrc file already configured')
@@ -184,7 +199,9 @@ def stop_torghost():
     os.system('sudo fuser -k 9051/tcp > /dev/null 2>&1')
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
     print(t() + ' Restarting Network manager'),
-    os.system('service network-manager restart')
+    # before
+    # os.system('service network-manager restart')
+    os.system('systemctl restart NetworkManager')
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
     print(t() + ' Fetching current IP...')
     time.sleep(3)
@@ -209,8 +226,8 @@ def main():
     if len(sys.argv) <= 1:
         usage()
     try:
-        (opts, args) = getopt.getopt(sys.argv[1:], 'srxhu', [
-            'start', 'stop', 'switch', 'help', 'update'])
+        (opts, args) = getopt.getopt(sys.argv[1:], 'srxh', [
+            'start', 'stop', 'switch', 'help'])
     except (getopt.GetoptError):
         usage()
         sys.exit(2)
