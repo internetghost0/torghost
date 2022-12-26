@@ -18,11 +18,11 @@ else
     echo [ERROR] Build failed
     exit 1
 fi
-#doas cp -r torghost /usr/bin/
-#if [ $? -eq 0 ]; then
-#    echo [SUCCESS] Copied binary to /usr/bin 
-#else
-#    echo [ERROR] Unable to copy
-#    exit 1
-#fi
-#
+sudo cp -r torghost /usr/bin/
+if [ $? -eq 0 ]; then
+    echo [SUCCESS] Copied binary to /usr/bin 
+else
+    echo [ERROR] Unable to copy
+    exit 1
+fi
+
