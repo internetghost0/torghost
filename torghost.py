@@ -89,11 +89,14 @@ def usage():
 def ip():
     while True:
         try:
-            # jsonRes = get(IP_API).json()
-            # ipTxt = jsonRes["ip"]
             checkTorPage = get(CHECK_TOR_URL).text
             if 'Congratulations. This browser is configured to use Tor.' in checkTorPage:
-                return 'You have tor IP'
+                # parse IP from tor website
+                pattern = 'Your IP address appears to be:  <strong>'
+                checkTorPage = checkTorPage[(checkTorPage.find(pattern) + len(pattern)):]
+                pattern = '</strong></p>'
+                ipTxt = checkTorPage[:checkTorPage.find(pattern)]
+                return f'You have tor IP ({ipTxt})'
             else:
                 return 'You have regular IP'
         except:
