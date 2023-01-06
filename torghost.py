@@ -67,10 +67,10 @@ def logo():
        | |/ _ \| '__| |  _| '_ \ / _ \/ __| __|
        | | (_) | |  | |_| | | | | (_) \__ \ |_
        |_|\___/|_|   \____|_| |_|\___/|___/\__|
-	{V} - github.com/SusmithKrishnan/torghost
+	    - github.com/SusmithKrishnan/torghost
 	    - github.com/internetghost0/torghost
 
-    """.format(V=VERSION))
+    """)
     print(bcolors.ENDC)
 
 
