@@ -210,13 +210,10 @@ def stop_torghost():
     os.system('systemctl restart NetworkManager')
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
     print(t() + ' Fetching current IP...')
-    time.sleep(3)
     print(t() + ' CURRENT IP : ' + bcolors.GREEN + ip() + bcolors.ENDC)
 
 
 def switch_tor():
-    print(t() + ' Please wait...')
-    time.sleep(7)
     print(t() + ' Requesting new circuit...'),
     with Controller.from_port(port=9051) as controller:
         controller.authenticate()
