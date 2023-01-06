@@ -209,8 +209,8 @@ def stop_torghost():
     # os.system('service network-manager restart')
     os.system('systemctl restart NetworkManager')
     print(bcolors.GREEN + '[done]' + bcolors.ENDC)
-    print(t() + ' Fetching current IP...')
-    print(t() + ' CURRENT IP : ' + bcolors.GREEN + ip() + bcolors.ENDC)
+    #print(t() + ' Fetching current IP...')
+    #print(t() + ' CURRENT IP : ' + bcolors.GREEN + ip() + bcolors.ENDC)
 
 
 def switch_tor():
