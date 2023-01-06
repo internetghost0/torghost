@@ -13,9 +13,18 @@ from stem.control import Controller
 from packaging import version
 
 
-# you can change it or remove it
-# to get bridges: https://bridges.torproject.org/bridges/?transport=obfs4
-TOR_BRIDGES = \
+## CONF
+
+USE_TOR_BRIDGES = True
+DNS_SERVER = '8.8.8.8'
+CHECK_TOR_IP_URL = "https://check.torproject.org/"
+
+## END CONF
+
+
+TOR_BRIDGES = ""
+if USE_TOR_BRIDGES:
+    TOR_BRIDGES = \
 """
 ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy
 UseBridges 1
@@ -25,14 +34,6 @@ Bridge obfs4 120.51.68.71:443 1B2E6BDA9DA29A9EB2D04E07BD4DA0BA16D8467A cert=j060
 Bridge obfs4 135.181.105.141:443 A7878416619C89A4BDC53CC180790576D61FA523 cert=OzNDqJ1iQRnpP3j91wWZtEwjYN3F6wCvKyC/7ltbQJSmByqzQVXgvfdoP6LODL9I0/hPJw iat-mode=0
 """
 
-# you can change dns-server
-DNS_SERVER = '8.8.8.8'
-
-
-VERSION = "3.1.1"
-# IP_API = "https://api.ipify.org/?format=json"
-CHECK_TOR_URL = "https://check.torproject.org/"
-LATEST_RELEASE_API = "https://api.github.com/repos/SusmithKrishnan/torghost/releases/latest"
 
 class bcolors:
 
@@ -89,7 +90,7 @@ def usage():
 def ip():
     while True:
         try:
-            checkTorPage = get(CHECK_TOR_URL).text
+            checkTorPage = get(CHECK_TOR_IP_URL).text
             if 'Congratulations. This browser is configured to use Tor.' in checkTorPage:
                 # parse IP from tor website
                 pattern = 'Your IP address appears to be:  <strong>'
